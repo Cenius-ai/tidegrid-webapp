@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Tide table output
+tides.csv
+june.csv
+*.local.json
+
+# Local environment (Tidegrid needs no configuration; see .env.example)
+.env

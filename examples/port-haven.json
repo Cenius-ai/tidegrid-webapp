@@ -1,0 +1,59 @@
+{
+  "name": "Port Haven",
+  "datum": "MLLW",
+  "z0_m": 2.35,
+  "units": "m",
+  "timezone_offset_minutes": -300,
+  "constituents": [
+    {
+      "name": "M2",
+      "amplitude_m": 3.72,
+      "phase_deg": 118.4
+    },
+    {
+      "name": "S2",
+      "amplitude_m": 0.63,
+      "phase_deg": 145.2
+    },
+    {
+      "name": "N2",
+      "amplitude_m": 0.72,
+      "phase_deg": 96.7
+    },
+    {
+      "name": "[redacted]",
+      "amplitude_m": 0.18,
+      "phase_deg": 143.9
+    },
+    {
+      "name": "K1",
+      "amplitude_m": 0.11,
+      "phase_deg": 275.3
+    },
+    {
+      "name": "[redacted]",
+      "amplitude_m": 0.09,
+      "phase_deg": 258.6
+    },
+    {
+      "name": "P1",
+      "amplitude_m": 0.04,
+      "phase_deg": 273.1
+    },
+    {
+      "name": "Q1",
+      "amplitude_m": 0.02,
+      "phase_deg": 250.4
+    },
+    {
+      "name": "M4",
+      "amplitude_m": 0.09,
+      "phase_deg": 312.8
+    },
+    {
+      "name": "M6",
+      "amplitude_m": 0.03,
+      "phase_deg": 45.6
+    }
+  ]
+}

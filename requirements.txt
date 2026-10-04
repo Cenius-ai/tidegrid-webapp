@@ -1,0 +1,11 @@
+# Tidegrid runtime dependencies: none.
+#
+# The tool itself is a single file that imports only the standard library
+# (argparse, csv, json, math, pathlib, datetime, tempfile), so a fresh clone runs
+# with no install step at all:
+#
+#     python3 tidegrid.py --help
+#
+# The only declared dependency is the test runner used by the committed suite in
+# tests/ (pytest is the standard command for this stack).
+pytest==9.1.1
