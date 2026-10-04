@@ -1,0 +1,231 @@
+=== Tidegrid demo ===
+
+$ tidegrid --version
+tidegrid 1.0.0
+
+$ tidegrid --help
+usage: tidegrid [-h] [--version] COMMAND ...
+
+Edit tidal harmonic constants and predict high and low waters.
+
+options:
+  -h, --help    show this help message and exit
+  --version     show program's version number and exit
+
+commands:
+  COMMAND
+    init        create a station file
+    show        print the station summary
+    validate    check the station file
+    set         edit station-level fields
+    constituents
+                list the built-in constituent catalog
+    list        list the station's constituents
+    add         append a harmonic constant
+    remove      delete a harmonic constant
+    predict     predict height or high/low waters
+    export      write a tide table
+
+examples:
+  tidegrid init --file station.json --name 'Port Haven' --datum MLLW --z0 2.35
+  tidegrid add M2 --file station.json --amplitude 3.72 --phase 118.4
+  tidegrid show --file station.json
+  tidegrid predict --file station.json --date 2024-06-01
+  tidegrid export --file station.json --from 2024-06-01 --to 2024-06-03 --format csv --out tides.csv
+
+exit codes: 0 success, 1 usage error, 2 data or validation error
+
+$ tidegrid init --file station.json --name Port Haven --datum MLLW --z0 2.35 --units m --tz-offset -300
+created station.json
+name             Port Haven
+datum            MLLW
+z0_m             2.35
+units            m
+timezone_offset  -05:00 (-300 minutes)
+
+constituents      none yet - add one with: tidegrid add M2 --file station.json --amplitude 0.62 --phase 120
+
+$ tidegrid add M2 --file station.json --amplitude 3.72 --phase 118.4
+added M2 to station.json (amplitude 3.72 m, phase 118.4 deg)
+
+$ tidegrid add S2 --file station.json --amplitude 0.63 --phase 145.2
+added S2 to station.json (amplitude 0.63 m, phase 145.2 deg)
+
+$ tidegrid add N2 --file station.json --amplitude 0.72 --phase 96.7
+added N2 to station.json (amplitude 0.72 m, phase 96.7 deg)
+
+$ tidegrid add K1 --file station.json --amplitude 0.11 --phase 275.3
+added K1 to station.json (amplitude 0.11 m, phase 275.3 deg)
+
+$ tidegrid add [redacted] --file station.json --amplitude 0.09 --phase 258.6
+added [redacted] to station.json (amplitude 0.09 m, phase 258.6 deg)
+
+$ tidegrid list --file station.json
+┌──────┬─────────────┬───────────┬────────────────────┐
+│ name │ amplitude_m │ phase_deg │ speed_deg_per_hour │
+├──────┼─────────────┼───────────┼────────────────────┤
+│ M2   │        3.72 │     118.4 │          28.984104 │
+│ S2   │        0.63 │     145.2 │          30.000000 │
+│ N2   │        0.72 │      96.7 │          28.439730 │
+│ K1   │        0.11 │     275.3 │          15.041069 │
+│ [redacted]   │        0.09 │     258.6 │          13.943035 │
+└──────┴─────────────┴───────────┴────────────────────┘
+
+$ tidegrid validate --file station.json
+station.json: ok - 5 constituents, z0_m 2.35, units m, datum MLLW
+
+$ tidegrid show --file station.json
+station station.json
+name             Port Haven
+datum            MLLW
+z0_m             2.35
+units            m
+timezone_offset  -05:00 (-300 minutes)
+constituents     5
+
+
+--- editing the datum offset Z0 (it drives every height) ---
+
+$ tidegrid set --file station.json --z0 3.35
+updated station.json
+  z0_m: 2.35 -> 3.35
+
+$ tidegrid predict --file station.json --at 2024-06-01 12:00
+2024-06-01 12:00   6.641 m
+
+$ tidegrid set --file station.json --units ft
+updated station.json
+  units: m -> ft
+
+$ tidegrid predict --file station.json --at 2024-06-01 12:00
+2024-06-01 12:00   21.787 ft
+
+$ tidegrid set --file station.json --units m
+updated station.json
+  units: ft -> m
+
+--- predictions ---
+
+$ tidegrid predict --file station.json --at 2024-06-01 00:00
+2024-06-01 00:00   6.555 m
+
+$ tidegrid predict --file station.json --date 2024-06-01
+┌──────────────────┬──────┬────────┬───────┐
+│ time             │ type │ height │ units │
+├──────────────────┼──────┼────────┼───────┤
+│ 2024-06-01 05:02 │ low  │ -0.295 │ m     │
+│ 2024-06-01 11:08 │ high │  6.998 │ m     │
+│ 2024-06-01 17:17 │ low  │ -0.590 │ m     │
+│ 2024-06-01 23:31 │ high │  7.391 │ m     │
+└──────────────────┴──────┴────────┴───────┘
+
+$ tidegrid predict --file station.json --from 2024-06-01 --to 2024-06-03
+┌──────────────────┬──────┬────────┬───────┐
+│ time             │ type │ height │ units │
+├──────────────────┼──────┼────────┼───────┤
+│ 2024-06-01 05:02 │ low  │ -0.295 │ m     │
+│ 2024-06-01 11:08 │ high │  6.998 │ m     │
+│ 2024-06-01 17:17 │ low  │ -0.590 │ m     │
+│ 2024-06-01 23:31 │ high │  7.391 │ m     │
+│ 2024-06-02 05:41 │ low  │ -0.483 │ m     │
+│ 2024-06-02 11:47 │ high │  7.172 │ m     │
+│ 2024-06-02 17:57 │ low  │ -0.775 │ m     │
+│ 2024-06-03 00:11 │ high │  7.557 │ m     │
+│ 2024-06-03 06:22 │ low  │ -0.609 │ m     │
+│ 2024-06-03 12:28 │ high │  7.282 │ m     │
+│ 2024-06-03 18:38 │ low  │ -0.877 │ m     │
+└──────────────────┴──────┴────────┴───────┘
+
+--- tide tables ---
+
+$ tidegrid export --file station.json --from 2024-06-01 --to 2024-06-03 --format csv --out tides.csv
+wrote tides.csv (11 rows)
+
+$ cat tides.csv
+time,type,height,units
+2024-06-01 05:02,low,-0.295,m
+2024-06-01 11:08,high,6.998,m
+2024-06-01 17:17,low,-0.590,m
+2024-06-01 23:31,high,7.391,m
+2024-06-02 05:41,low,-0.483,m
+2024-06-02 11:47,high,7.172,m
+2024-06-02 17:57,low,-0.775,m
+2024-06-03 00:11,high,7.557,m
+2024-06-03 06:22,low,-0.609,m
+2024-06-03 12:28,high,7.282,m
+2024-06-03 18:38,low,-0.877,m
+
+$ tidegrid export --file station.json --from 2024-06-01 --to 2024-06-03 --format txt
+┌──────────────────┬──────┬────────┬───────┐
+│ time             │ type │ height │ units │
+├──────────────────┼──────┼────────┼───────┤
+│ 2024-06-01 05:02 │ low  │ -0.295 │ m     │
+│ 2024-06-01 11:08 │ high │  6.998 │ m     │
+│ 2024-06-01 17:17 │ low  │ -0.590 │ m     │
+│ 2024-06-01 23:31 │ high │  7.391 │ m     │
+│ 2024-06-02 05:41 │ low  │ -0.483 │ m     │
+│ 2024-06-02 11:47 │ high │  7.172 │ m     │
+│ 2024-06-02 17:57 │ low  │ -0.775 │ m     │
+│ 2024-06-03 00:11 │ high │  7.557 │ m     │
+│ 2024-06-03 06:22 │ low  │ -0.609 │ m     │
+│ 2024-06-03 12:28 │ high │  7.282 │ m     │
+│ 2024-06-03 18:38 │ low  │ -0.877 │ m     │
+└──────────────────┴──────┴────────┴───────┘
+
+--- the built-in constituent catalog (reads no station file) ---
+
+$ tidegrid constituents
+┌──────┬────────────────────┬────────────────────────────────────┐
+│ name │ speed_deg_per_hour │ description                        │
+├──────┼────────────────────┼────────────────────────────────────┤
+│ M2   │          28.984104 │ Principal lunar semidiurnal        │
+│ S2   │          30.000000 │ Principal solar semidiurnal        │
+│ N2   │          28.439730 │ Larger lunar elliptic semidiurnal  │
+│ [redacted]   │          30.082137 │ Lunisolar semidiurnal              │
+│ K1   │          15.041069 │ Lunisolar diurnal                  │
+│ [redacted]   │          13.943035 │ Principal lunar diurnal            │
+│ P1   │          14.958931 │ Principal solar diurnal            │
+│ Q1   │          13.398661 │ Larger lunar elliptic diurnal      │
+│ M4   │          57.968208 │ First shallow-water overtide of M2 │
+│ M6   │          86.952313 │ Third shallow-water overtide of M2 │
+└──────┴────────────────────┴────────────────────────────────────┘
+
+=== exit-code contract ===
+
+$ tidegrid frobnicate   # expect exit 1
+stderr: usage: tidegrid [-h] [--version] COMMAND ...
+stderr: tidegrid: error: argument COMMAND: invalid choice: 'frobnicate' (choose from 'init', 'show', 'validate', 'set', 'constituents', 'list', 'add', 'remove', 'predict', 'export')
+exit: 1
+
+$ tidegrid set --file station.json --units fathoms   # expect exit 1
+stderr: usage: tidegrid set [-h] [--file PATH] [--no-color] [--z0 M] [--name NAME]
+stderr:                     [--datum DATUM] [--units {m,ft}] [--tz-offset MINUTES]
+stderr: tidegrid set: error: argument --units: invalid choice: 'fathoms' (choose from 'm', 'ft')
+exit: 1
+
+$ tidegrid show --file missing.json   # expect exit 2
+stderr: tidegrid: station file 'missing.json' not found - create it with: tidegrid init --file missing.json
+exit: 2
+
+$ tidegrid predict --file station.json --date 2024-13-45   # expect exit 2
+stderr: tidegrid: '2024-13-45' is not a real calendar date - use YYYY-MM-DD, for example 2024-06-01
+exit: 2
+
+$ tidegrid add NOTREAL --file station.json --amplitude 0.5 --phase 10   # expect exit 2
+stderr: tidegrid: NOTREAL: unknown constituent - run 'tidegrid constituents' for the catalog
+exit: 2
+
+$ tidegrid add M2 --file station.json --amplitude 0.10 --phase 5   # expect exit 2
+stderr: tidegrid: M2: already present in station.json - remove it first with: tidegrid remove M2 --file station.json
+exit: 2
+
+$ tidegrid remove M6 --file station.json   # expect exit 2
+stderr: tidegrid: M6: not present in station.json - run 'tidegrid list --file station.json' to see the stored constituents
+exit: 2
+
+=== checks ===
+tides.csv holds 11 data rows
+
+$ tidegrid predict --file station.json --at "2024-06-01 05:02"   # the first exported row
+exported height -0.295 == predicted height -0.295
+demo finished cleanly.
