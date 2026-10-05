@@ -68,7 +68,7 @@ _Full guide: [`USAGE.md`](USAGE.md)_
 
 ## Architecture
 
-A self-contained Full-stack app project (25 files): top-level directories include `demo/`, `examples/`, `tests/`. Starting up is just `./install.sh`: it installs what is needed and pre-fills the database so you have data to work with straight away. Step-by-step setup guide: [`INSTALL.md`](INSTALL.md).
+A self-contained Full-stack app project (16 files): top-level directories include `demo/`, `examples/`, `tests/`. Starting up is just `./install.sh`: it installs what is needed and pre-fills the database so you have data to work with straight away. Step-by-step setup guide: [`INSTALL.md`](INSTALL.md).
 
 ## FAQ
 
